@@ -210,7 +210,7 @@ export default function SatzRound({ store, region, mode, paused, onExit, onNext 
   if (summary) return <RoundSummary region={region} mode={mode} summary={summary} name={name} store={store} before={before} onExit={onExit} onNext={onNext}/>;
   const progress = mode === 'satz-lernen' ? page / 3 * 100 : index / items.length * 100;
   return <div className={'practice-page satz-page comic-round sl-round mode-' + mode}>
-    <div className="practice-heading"><button className="text-button" onClick={leave}><ArrowLeft size={18}/>Trainingsplatz</button><span className="practice-title">{satzStepInfo[mode].label}</span><span className="points-pill"><PointsPill amount={points}/>{combo > 1 && <span className="combo">{combo}× Serie</span>}</span></div>
+    <div className="practice-heading"><button className="text-button" onClick={leave}><ArrowLeft size={18}/>Königreich</button><span className="practice-title">{satzStepInfo[mode].label}</span><span className="points-pill"><PointsPill amount={points}/>{combo > 1 && <span className="combo">{combo}× Serie</span>}</span></div>
     <div className="trail-progress" role="progressbar" aria-label="Rundenfortschritt" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)}><span className="trail" style={{ width: progress + '%' }}/><span className="trail-pencil" style={{ left: `calc(${progress / 100} * (100% - 32px))` }} aria-hidden="true">✏️</span><span className="trail-count">{mode === 'satz-lernen' ? `${Math.min(page + 1, 3)} / 3` : `${index + 1} / ${items.length}`}</span><CastRascal world="sl" mood={castMood}/></div>
     <div className="practice-layout">
       <aside className={'practice-companion' + (settings.effects ? ' arriving' : '')}><div className="speech-bubble" aria-live="polite">{talk}</div><div className="cast-stage"><CastHost world="sl" mood={castMood}/><Mascot small celebrate={castMood === 'right'} effects={settings.effects}/></div><span className="companion-caption">PRINZESSIN & {MASCOT.toUpperCase()}</span></aside>
@@ -250,7 +250,7 @@ function RoundSummary({ region, mode, summary, name, store, before, onExit, onNe
     <PointsPill amount={summary.points} label="Punkte in dieser Runde"/>
     {mode !== 'satz-lernen' && <div className="summary-stats"><div><strong>{summary.score}%</strong><span>{region.kind === 'koenige' ? 'Könige richtig' : 'Grenzen richtig'}</span></div><div><strong>{summary.exact}/{summary.total}</strong><span>{summary.total === 1 ? 'Text' : 'Sätze'} ohne Hilfe</span></div></div>}
     <div className="modal-actions">
-      <button className="button secondary" onClick={onExit}>Zum Trainingsplatz</button>
+      <button className="button secondary" onClick={onExit}>Zum Königreich</button>
       {next && next !== mode && <button className="button primary" autoFocus onClick={() => onNext(next as SatzMode)}>Weiter: {satzStepInfo[next as SatzMode].label}<ArrowRight size={18}/></button>}
       {next === mode && <button className="button primary" autoFocus onClick={() => onNext(mode)}>Noch eine Runde<ArrowRight size={18}/></button>}
     </div>
