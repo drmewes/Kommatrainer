@@ -11,6 +11,7 @@ import StudyBreak, { HeaderStudyTimer, IdleCheck, StudyDock } from './StudyBreak
 import Tutorial, { type TutorialPage } from './Tutorial';
 import { ParentGate, ParentSetup } from './ParentLock';
 import { SchreibiFace } from './Schreibi';
+import World from './World';
 
 export default function SchreibiApp({ owner }: { owner: string }) {
   const store = useLearningStore(owner), settings = store.settings;
@@ -37,6 +38,7 @@ export default function SchreibiApp({ owner }: { owner: string }) {
   const closeTour = useCallback(() => { setTutorialPage(null); setTutorialOpen(false); }, []);
   const noop = () => {};
   return <div className={'app ' + (shownView === 'admin' ? 'parent-view ' : '') + (shownView === 'satzland' ? 'focus-view ' : '') + (tutorialOpen ? 'tutorial-active' : '')}>
+    {store.loaded && <World store={store}/>}
     <header className="site-header">
       {/* The same way home from every page: left of everything, labelled, and it asks before a round is lost. */}
       <button className={'home-button' + (shownView === 'home' ? ' here' : '')} data-tour="home-button" onClick={() => leaveFirst(() => go('home'))} aria-label="Zum Königreich" aria-current={shownView === 'home' ? 'page' : undefined}><House size={22}/><span>Start</span></button>

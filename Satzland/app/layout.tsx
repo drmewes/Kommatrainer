@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./components/satzland.css";
 import "./components/uebung.css";
+import "./components/world.css";
 
 export const metadata: Metadata = {
   title: "Kommatrainer",
