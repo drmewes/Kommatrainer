@@ -1,0 +1,90 @@
+/* Exercise views in the comic make of their world, but quiet: the task stays the focus.
+ * Only the frames change (contour, hard offset shadow, a slight tilt); no banners, no extra pictures.
+ * A round inherits the world of the box it was started from: .wb-round = Wörterbahn, .sl-round = Satzland. */
+.wb-round {
+  --rd-line: #1d3b36; --rd-sx: -1;            /* shadow falls to the lower left, like on the training place */
+  --rd-paper: #fdfefb; --rd-tilt: -.45deg;
+  --rd-sign: #1d3b36; --rd-sign-ink: #fff;
+  /* The progress bar is a track: sleepers under two rails */
+  --rd-trail: linear-gradient(180deg, transparent 9px, #1d3b36aa 9px 11px, transparent 11px 23px, #1d3b36aa 23px 25px, transparent 25px),
+              repeating-linear-gradient(90deg, #b9875a 0 7px, #e4ecd7 7px 17px);
+}
+.sl-round {
+  --rd-line: #1f2d44; --rd-sx: 1;             /* shadow to the lower right, like the Satzland box */
+  --rd-paper: #fffdf7; --rd-tilt: .45deg;
+  --rd-sign: var(--sun); --rd-sign-ink: var(--ink);
+  /* The progress bar is a border path: kingdoms with golden posts in between */
+  --rd-trail: repeating-linear-gradient(90deg, var(--k1) 0 70px, var(--post) 70px 75px, var(--k2) 75px 145px, var(--post) 145px 150px, var(--k3) 150px 220px, var(--post) 220px 225px);
+}
+.comic-round { --rd-d: 6px; }
+
+/* Heading: the step name is a small sign, points sit on a stuck-on label. */
+.comic-round .practice-title { padding: 5px 16px; border: 3px solid var(--rd-line); border-radius: 10px; background: var(--rd-sign); color: var(--rd-sign-ink); box-shadow: calc(var(--rd-sx) * 3px) 3px 0 var(--rd-line); transform: rotate(calc(var(--rd-tilt) * -3)); }
+.comic-round .points-pill { border: 2px solid var(--rd-line); border-radius: 10px; background: #fff; box-shadow: calc(var(--rd-sx) * 2px) 2px 0 var(--rd-line); }
+
+/* Progress: same function, drawn as a piece of the world */
+.comic-round .trail-progress { height: 34px; border: 3px solid var(--rd-line); border-radius: 10px; background: var(--rd-paper); box-shadow: calc(var(--rd-sx) * 3px) 3px 0 var(--rd-line); }
+.comic-round .trail { border-radius: 7px 0 0 7px; background: var(--rd-trail); box-shadow: inset -3px 0 0 var(--rd-line); }
+.comic-round .trail-count { padding: 1px 8px; border-radius: 6px; background: #fffffff0; color: var(--ink); }
+
+/* Schreibi's speech bubble gets the same contour; the tail keeps it. */
+.comic-round .practice-companion .speech-bubble, .comic-round .summary-bubble { border: 3px solid var(--rd-line); box-shadow: calc(var(--rd-sx) * 4px) 4px 0 var(--rd-line); }
+.comic-round .practice-companion .speech-bubble::after, .comic-round .summary-bubble::after { bottom: -14px; border: solid var(--rd-line); border-width: 0 3px 3px 0; border-radius: 0 0 5px 0; }
+.comic-round .companion-caption { border: 2px solid var(--rd-line); border-radius: 6px; background: #fff; color: var(--rd-line); transform: rotate(calc(var(--rd-tilt) * 3)); }
+
+/* The task card: the frame is a sheet stuck on slightly askew; its content stays straight. */
+.comic-round :is(.question-card, .exam-paper), .comic-sheet { position: relative; isolation: isolate; border: 0; background: transparent; box-shadow: none; overflow: visible; }
+.comic-round :is(.question-card, .exam-paper)::before, .comic-sheet::before { content: ""; position: absolute; inset: 0; z-index: -1; border: 3px solid var(--rd-line); border-radius: 24px 20px 26px 18px; background: var(--rd-paper); box-shadow: calc(var(--rd-sx) * var(--rd-d)) var(--rd-d) 0 var(--rd-line); transform: rotate(var(--rd-tilt)); transition: box-shadow .2s; pointer-events: none; }
+.comic-round .question-card.exact::before { box-shadow: inset 0 0 0 4px #a7dd96, calc(var(--rd-sx) * var(--rd-d)) var(--rd-d) 0 var(--rd-line); }
+.comic-round .question-card.tolerated::before { box-shadow: inset 0 0 0 4px #ffe08a, calc(var(--rd-sx) * var(--rd-d)) var(--rd-d) 0 var(--rd-line); }
+.comic-round .question-card.incorrect::before { box-shadow: inset 0 0 0 4px #ffc2b4, calc(var(--rd-sx) * var(--rd-d)) var(--rd-d) 0 var(--rd-line); }
+/* Summaries lean the other way, so the end of a round looks like a new page. */
+.comic-sheet::before { transform: rotate(calc(var(--rd-tilt) * -1.6)); }
+
+/* The check's header strip: same make, no tilt */
+.comic-round .exam-top { border: 3px solid var(--rd-line); border-radius: 14px; background: #fff; box-shadow: calc(var(--rd-sx) * 3px) 3px 0 var(--rd-line); }
+
+
+/* From 860px down Schreibi stands beside the bubble, so its tail points left. */
+@media (max-width: 860px) {
+  .comic-round .practice-companion .speech-bubble::after { bottom: auto; left: -10px; border-width: 0 0 3px 3px; border-radius: 0 0 0 5px; }
+}
+@media (max-width: 620px) {
+  .comic-round { --rd-d: 4px; --rd-tilt: -.25deg; }
+  .sl-round { --rd-tilt: .25deg; }
+  .comic-round .practice-title { transform: none; }
+}
+
+/* Satzland's story pictures inside a round are comic panels of the same make */
+.sl-round :is(.sl-story-image, .sl-summary-image) { border: 3px solid var(--rd-line); box-shadow: 4px 4px 0 var(--rd-line); }
+
+/* The world's figures in the round: the host stands with Schreibi beside the task and reacts;
+ * the rascal waits at the end of the progress path and only reacts to right answers. */
+/* The figures stand in front of the task card (Dora's ear trumpet may reach over its edge). */
+.comic-round .practice-companion { z-index: 2; }
+.cast-stage { display: flex; align-items: flex-end; justify-content: center; gap: 2px; }
+.comic-round .cast-stage .mascot { width: 112px; }
+.comic-round .cast-stage .mascot.small { width: 74px; }
+.cast-host { display: block; width: auto; height: 190px; transform-origin: 50% 100%; }
+.cast-host.cast-sl { height: 215px; }
+.cast-host.mood-right { animation: cast-hop .7s ease-out both; }
+.cast-host.mood-wrong { animation: cast-ponder .6s ease-out both; }
+@keyframes cast-hop { 0% { transform: translateY(0) scale(.96); } 35% { transform: translateY(-14px) scale(1.03); } 70% { transform: translateY(0) scale(.99); } 100% { transform: none; } }
+@keyframes cast-ponder { 0% { transform: rotate(0); } 50% { transform: rotate(-3deg); } 100% { transform: rotate(-1deg); } }
+.cast-rascal { position: absolute; z-index: 1; right: 130px; bottom: calc(100% - 10px); width: auto; height: 70px; pointer-events: none; transform-origin: 50% 100%; }
+.cast-rascal.mood-right { animation: cast-pop .5s ease-out both; }
+@keyframes cast-pop { 0% { transform: scale(.7); } 60% { transform: scale(1.1); } 100% { transform: none; } }
+.comic-round .trail-progress { margin-top: 18px; }
+.summary-cast { gap: 10px; }
+.summary-cast .cast-host { height: 150px; }
+@media (max-width: 860px) {
+  .comic-round .practice-companion { position: relative; top: auto; grid-template-columns: auto minmax(0, 1fr); }
+  .comic-round .practice-companion .cast-stage { grid-row: 1; grid-column: 1; }
+  .comic-round .cast-stage .mascot, .comic-round .cast-stage .mascot.small { width: 52px; }
+  .comic-round .cast-host { height: 100px; }
+}
+@media (max-width: 620px) {
+  .cast-rascal { right: 2px; height: 40px; }
+  .comic-round .trail-progress { margin-top: 18px; }
+  .comic-round .trail-count { right: 46px; }
+}
