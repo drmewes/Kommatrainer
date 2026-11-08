@@ -80,3 +80,14 @@
   .comic-round .trail-progress { margin-top: 18px; }
   .comic-round .trail-count { right: 46px; }
 }
+
+/* Wider screens: the task card stands on the left, exactly as wide as its heading and progress path; the figures
+ * stand freely to its right from the top, so the middle and right of the world picture stay visible. */
+@media (min-width: 861px) {
+  .comic-round.practice-page { grid-template-columns: minmax(0, 880px) 250px; column-gap: 26px; justify-content: start; align-items: start; }
+  .comic-round.practice-page > .practice-heading { grid-column: 1; grid-row: 1; }
+  .comic-round.practice-page > .trail-progress { grid-column: 1; grid-row: 2; }
+  .comic-round.practice-page > .practice-layout { display: contents; }
+  .comic-round.practice-page .question-card { grid-column: 1; grid-row: 3; }
+  .comic-round.practice-page .practice-companion { grid-column: 2; grid-row: 1 / span 3; align-self: start; }
+}
