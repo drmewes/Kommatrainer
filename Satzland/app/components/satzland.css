@@ -31,21 +31,25 @@
 .satz-comic { --ink-line: #1f2d44; position: relative; overflow: visible; background-color: #fffaf0; background-image: radial-gradient(#f3dfb4 1.1px, transparent 1.3px); background-size: 14px 14px; border: 3px solid var(--ink-line); box-shadow: 7px 7px 0 var(--ink-line); gap: 18px; }
 .satz-kleckser-peek { position: absolute; z-index: 2; right: -22px; top: -18px; width: 88px; transform-origin: 50% 90%; animation: satz-peek 3.2s ease-in-out infinite; filter: drop-shadow(3px 4px 0 #1f2d4433); pointer-events: none; }
 @keyframes satz-peek { 0%, 100% { transform: rotate(8deg) translateY(0); } 50% { transform: rotate(-6deg) translateY(-8px); } }
-/* Heading: plain text in the sky. The regions are flag poles on the free stretch of wall: a flag where the region is freed.
- * Positions use cqi, so they follow the picture (it is cropped from the top only). */
-.satz-title { position: absolute; left: 11%; top: 1.6cqi; display: grid; gap: 2px; text-shadow: 0 0 2px #fff, 0 0 6px #ffffffcc; }
-.satz-title h1 { font-size: clamp(1.4rem, 5.4cqi, 2.5rem); font-weight: 700; line-height: 1; text-shadow: 3px 3px 0 #ffd970, 0 0 8px #fff; }
-.satz-title p { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: clamp(.85rem, 2.3cqi, 1.05rem); color: var(--ink-soft); }
+/* Heading: plain text in the sky. The regions are flag poles standing in the battlement gaps (--x from Satzland.tsx): a flag
+ * where the region is freed. The count is written on the wall right below them.
+ * Positions use cqi of the banner, so they follow the picture (it is cropped from the top only). */
+.satz-title { position: absolute; left: 10%; top: 1.6cqi; display: grid; gap: 2px; text-shadow: 0 0 2px #fff, 0 0 6px #ffffffcc; }
+.satz-title h1 { font-size: clamp(1.4rem, 4.6cqi, 2.4rem); font-weight: 700; line-height: 1; text-shadow: 3px 3px 0 #ffd970, 0 0 8px #fff; }
 .satz-story-link { position: absolute; right: 3%; bottom: 3cqi; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 3px solid var(--ink-line); border-radius: 10px; background: var(--sun); box-shadow: 3px 3px 0 var(--ink-line); font-family: var(--font-display); font-weight: 700; font-size: clamp(.85rem, 2.4cqi, 1.05rem); color: var(--ink); transform: rotate(-1.5deg); transition: transform .1s ease, box-shadow .1s ease; }
 .satz-story-link:hover { transform: rotate(-1.5deg) translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink-line); }
 .satz-story-link:active { transform: rotate(-1.5deg) translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-line); }
-.satz-flags { position: absolute; left: 58%; right: 2%; bottom: 16.6cqi; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); align-items: end; justify-items: center; margin: 0; padding: 0; list-style: none; pointer-events: none; }
-.satz-flags img { display: block; height: 11cqi; width: auto; transform-origin: 50% 100%; }
+.satz-flags { --flag-h: 11cqi; position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+/* The pole sits 13 px (empty) or 14.5 px (freed, 142 px wide) from the left of a 240 px picture; that point goes into the gap. */
+.satz-flags li { position: absolute; left: var(--x); bottom: 16.2cqi; }
+.satz-flags img { display: block; height: var(--flag-h); width: auto; margin-left: calc(var(--flag-h) * -13 / 240); transform-origin: 50% 100%; }
+.satz-flags li.won img { margin-left: calc(var(--flag-h) * -14.5 / 240); transform-origin: 10.2% 100%; }
+.satz-freed { position: absolute; left: var(--x); top: calc(100% - 15cqi); transform: translateX(-50%); margin: 0; padding: .1em .7em .15em; white-space: nowrap; border-radius: 999px; background: #fffaf0e0; box-shadow: 0 0 6px 4px #fffaf0b0; font-family: var(--font-display); font-weight: 700; font-size: clamp(.9rem, 2.5cqi, 1.25rem); line-height: 1.15; color: var(--ink); pointer-events: none; }
 .satz-flags li.won img { animation: satz-wave 4s ease-in-out infinite; }
 .satz-flags li:nth-child(2n).won img { animation-delay: -1.3s; }
 @keyframes satz-wave { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
 .satz-comic.still .satz-flags img { animation: none; }
-.satz-banner { position: relative; margin: -6px -6px 0; border: 3px solid var(--ink-line); border-radius: 16px; overflow: hidden; box-shadow: 4px 4px 0 var(--ink-line); background: #e9f3ff; }
+.satz-banner { container-type: inline-size; position: relative; margin: -6px -6px 0; border: 3px solid var(--ink-line); border-radius: 16px; overflow: hidden; box-shadow: 4px 4px 0 var(--ink-line); background: #e9f3ff; }
 .satz-banner > img { display: block; width: 100%; aspect-ratio: 3 / 1; object-fit: cover; }
 .satz-region-row { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
 .satz-region-row .field { flex: 1 1 260px; }
@@ -236,4 +240,10 @@ button.sl-word:hover:not(:disabled) { background: var(--sun-soft); }
 @media (max-width: 420px) {
 }
 @container (min-width: 720px) { .satz-banner > img { aspect-ratio: 3.6 / 1; object-position: 50% 100%; } }
+/* Narrow banners (phones): smaller flags stay clear of the heading, a smaller story button leaves the wall to the count. */
+@container (max-width: 480px) {
+  .satz-flags { --flag-h: 9.5cqi; }
+  .satz-story-link { bottom: 1.5cqi; padding: 2px 8px; gap: 4px; border-width: 2px; box-shadow: 2px 2px 0 var(--ink-line); font-size: .8rem; }
+  .satz-story-link svg { width: 14px; height: 14px; }
+}
 

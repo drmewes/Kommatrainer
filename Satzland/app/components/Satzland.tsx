@@ -9,6 +9,10 @@ import { Meter, SpeakText, Stars } from './ui';
 import SatzRound, { img, type Region } from './SatzlandRound';
 
 const all = regions as unknown as Region[];
+// Gaps between the battlements of banner-burg.webp, in % of the picture's width. The flags take the rightmost ones
+// up to 90 %, so the heading keeps its sky and a freed flag still fits into the picture; more regions spread evenly.
+const WALL_GAPS = [48.6, 54.37, 60.47, 66.57, 72.53, 78.6, 84.67, 90.3];
+const flagX = (i: number, n: number) => n <= WALL_GAPS.length ? WALL_GAPS[WALL_GAPS.length - n + i] : 48 + i * 42 / (n - 1);
 const stepIcon: Record<SatzMode, typeof BookOpen> = { 'satz-lernen': BookOpen, 'satz-koenige': Crown, 'satz-grenzweg': Route, 'satz-setzen': Flag, 'satz-text': FileSearch, 'satz-fest': PartyPopper };
 const labelsOf: Partial<Record<SatzMode, string>> = { 'satz-koenige': 'Könige gefunden', 'satz-grenzweg': 'Grenzweg', 'satz-setzen': 'Selbst gesetzt', 'satz-text': 'Textdetektiv', 'satz-fest': 'Grenzfest' };
 // What the training place asks Satzland to do: a step in a region, or only the story.
@@ -36,14 +40,15 @@ export function SatzPanel({ store, onStart }: { store: Store; onStart: (start: S
   return <>
     <section className={'panel learning-dashboard satz-dashboard satz-comic' + (settings.effects ? '' : ' still')}>
       <img className="satz-kleckser-peek" src={img('kleckser')} alt="" aria-hidden="true"/>
-      {/* The heading is plain text in the sky; on the free stretch of wall one pole per region: its flag is back once the region is freed, otherwise Kleckser has inked it away. */}
+      {/* The heading is plain text in the sky; in the battlement gaps one pole per region: its flag is back once the region is freed, otherwise Kleckser has inked it away. The count is written on the wall below. */}
       <div className="satz-banner" data-tour="kingdom"><img src={img('banner-burg')} alt=""/>
-        <div className="satz-title"><h1>Königreich Satzland</h1><p>{freed} von {built.length} Gebieten befreit</p></div>
+        <div className="satz-title"><h1>Königreich Satzland</h1></div>
         <button type="button" className="satz-story-link" onClick={() => onStart({ regionId: region.id, mode: 'story' })}><BookOpen size={18}/>Die Geschichte</button>
-        <ol className="satz-flags" aria-label={`${freed} von ${built.length} Gebieten befreit`} style={{ '--n': built.length } as CSSProperties}>{built.map(r => {
+        <ol className="satz-flags" aria-label={`${freed} von ${built.length} Gebieten befreit`}>{built.map((r, i) => {
           const won = !!progress.get(r.id)?.freed;
-          return <li key={r.id} className={won ? 'won' : ''} title={`${r.n}. ${r.name}${won ? ' – befreit' : ''}`}><img src={img(won ? 'fahne-frei' : 'fahne-leer')} alt=""/></li>;
+          return <li key={r.id} className={won ? 'won' : ''} title={`${r.n}. ${r.name}${won ? ' – befreit' : ''}`} style={{ '--x': flagX(i, built.length) + '%' } as CSSProperties}><img src={img(won ? 'fahne-frei' : 'fahne-leer')} alt=""/></li>;
         })}</ol>
+        <p className="satz-freed" aria-hidden="true" style={{ '--x': (flagX(0, built.length) + flagX(built.length - 1, built.length)) / 2 + '%' } as CSSProperties}>{freed} von {built.length} Gebieten befreit</p>
       </div>
       <div className="satz-region-row" data-tour="region">
         <label className="field"><span>Dein Gebiet</span><select value={region.id} onChange={e => setRegionId(e.target.value)}>{all.map(r => <option key={r.id} value={r.id} disabled={!r.built}>{r.n}. {r.name} · {r.rule}{r.built ? progress.get(r.id)?.freed ? ' ✓' : '' : ' (im Nebel)'}</option>)}</select></label>
